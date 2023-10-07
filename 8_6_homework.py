@@ -21,19 +21,18 @@ def test_dark_theme_by_time_and_user_choice():
     dark_theme_enabled_by_user = False - Темная тема выключена
     dark_theme_enabled_by_user = None - Пользователь не сделал выбор (используется переключение по времени системы)
     """
-    current_time = time(hour=6)
+    current_time = time(hour=16)
     dark_theme_enabled_by_user = None
     # TODO переключите темную тему в зависимости от времени суток,
     #  но учтите что темная тема может быть включена вручную
 
-    if (time(hour=0) <= current_time <= time(hour=5) or time(hour=22) <= current_time <= time(hour=23)) \
-            and dark_theme_enabled_by_user or dark_theme_enabled_by_user == None:
+    if (time(hour=0) <= current_time <= time(hour=23)) and dark_theme_enabled_by_user is True:
         is_dark_theme = True
-    elif (time(hour=0) <= current_time <= time(hour=5) or time(hour=22) <= current_time <= time(hour=23)) \
-            and not dark_theme_enabled_by_user:
+    elif ((time(hour=22) <= current_time <= time(hour=23)) or (time(hour=0) <= current_time <= time(hour=6)))\
+            and dark_theme_enabled_by_user is None:
+        is_dark_theme = True
+    elif (time(hour=0) <= current_time <= time(hour=23)) and dark_theme_enabled_by_user is False:
         is_dark_theme = False
-    elif (time(hour=5) <= current_time <= time(hour=21)) or dark_theme_enabled_by_user:
-        is_dark_theme = True
     else:
         is_dark_theme = False
     assert is_dark_theme is True
@@ -52,11 +51,8 @@ def test_find_suitable_user():
     ]
 
     # TODO найдите пользователя с именем "Olga"
-    for user in users:
-        if user["name"] == "Olga":
-            return user['name']
-
-    suitable_users = user
+    suitable_users = [i for i in users if i["name"] == "Olga"]
+    suitable_users = suitable_users[0]
 
     assert suitable_users == {"name": "Olga", "age": 45}
 
@@ -88,6 +84,7 @@ def function_attribute(func, *args):
     result = f"{name_convert} [{', '.join(args)}]"
     print(result)
     return result
+
 
 def test_readable_function():
     open_browser(browser_name="Chrome")
